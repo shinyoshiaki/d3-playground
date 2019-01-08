@@ -4,7 +4,7 @@ import { BaseType } from "d3";
 
 interface Props {
   width: number;
-  height: number;
+  height: any;
   from: Date;
   to: Date;
   data: {

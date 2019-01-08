@@ -4,11 +4,11 @@ import * as d3 from "d3";
 import Component from ".";
 
 import ImportCss from "../../../../styles";
-import MeasureHOC from "../../../../utill/fit";
+import MeasureWrap from "../../../../utill/fit";
 
 ImportCss();
 const parseTime = d3.timeParse("%Y");
-const data = [
+export const lineExample = [
   {
     key: "apples",
     color: "red",
@@ -65,10 +65,10 @@ const data = [
 
 storiesOf("line", module).add("normal1", () => (
   <div style={{ width: "100%", height: "100vh" }}>
-    <MeasureHOC
+    <MeasureWrap
       target={(a: number, b: number) => (
         <Component
-          data={data}
+          data={lineExample}
           from={new Date(2013, 0, 1)}
           to={new Date(2017, 0, 1)}
           width={a}

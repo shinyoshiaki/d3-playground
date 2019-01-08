@@ -2,7 +2,7 @@ import * as React from "react";
 
 import Measure from "react-measure";
 
-export default class MeasureHOC extends React.Component<
+export default class MeasureWrap extends React.Component<
   { target: (width: number, height: number) => any },
   { width: number; height: number }
 > {
