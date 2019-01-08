@@ -1,0 +1,8 @@
+.axis .chart-axis__label {
+  text-anchor: end; }
+
+.axis .chart-axis__label--x {
+  text-anchor: middle; }
+
+.axis .chart-axis__axis {
+  stroke-opacity: 0.3; }
