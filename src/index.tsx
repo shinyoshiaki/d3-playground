@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./containers/pages/App";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/index.css";
+import "semantic-ui-css/semantic.min.css";
 import { HashRouter, Route } from "react-router-dom";
 
 ReactDOM.render(
