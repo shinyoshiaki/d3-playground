@@ -11,6 +11,7 @@ const parseTime = d3.timeParse("%Y");
 const data = [
   {
     key: "apples",
+    color: "red",
     values: [
       {
         date: parseTime("2013"),
@@ -31,15 +32,12 @@ const data = [
       {
         date: parseTime("2017"),
         value: 150
-      },
-      {
-        date: parseTime("2018"),
-        value: 150
       }
     ]
   },
   {
     key: "bananas",
+    color: "yellow",
     values: [
       {
         date: parseTime("2013"),
@@ -59,10 +57,6 @@ const data = [
       },
       {
         date: parseTime("2017"),
-        value: 140
-      },
-      {
-        date: parseTime("2018"),
         value: 150
       }
     ]
@@ -73,7 +67,13 @@ storiesOf("line", module).add("normal1", () => (
   <div style={{ width: "100%", height: "100vh" }}>
     <MeasureHOC
       target={(a: number, b: number) => (
-        <Component data={data} width={a} height={b} />
+        <Component
+          data={data}
+          from={new Date(2013, 0, 1)}
+          to={new Date(2017, 0, 1)}
+          width={a}
+          height={b}
+        />
       )}
     />
   </div>

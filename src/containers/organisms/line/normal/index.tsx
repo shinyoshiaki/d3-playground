@@ -5,7 +5,13 @@ import { BaseType } from "d3";
 interface Props {
   width: number;
   height: number;
-  data: any[];
+  from: Date;
+  to: Date;
+  data: {
+    key: string;
+    color: string;
+    values: { date: any; value: number }[];
+  }[];
 }
 
 export default class SvgMultipleLines extends React.Component<Props, {}> {
@@ -14,35 +20,40 @@ export default class SvgMultipleLines extends React.Component<Props, {}> {
     super(props);
   }
 
+  componentDidMount() {
+    this.createChart();
+  }
+
   componentDidUpdate() {
-    console.log("will");
+    this.createChart();
+  }
+
+  createChart() {
     if (!this.chartRef) return;
-    console.log({ ref: this.chartRef }, this.chartRef);
 
-    const width = this.props.width,
-      height = this.props.height;
+    console.log(this.props);
 
-    const chart = d3
-      .select(this.chartRef)
-      .attr("width", width + 100)
-      .attr("height", height + 200) //200 for legend
+    const { width, height } = this.props;
+
+    const svg = d3.select(this.chartRef);
+
+    const chart = svg
+      .attr("width", width)
+      .attr("height", height)
       .append("g")
-      .attr("transform", "translate(100, 0)");
+      .attr("transform", "translate(100, -20)");
 
     const x = d3
       .scaleTime()
-      .domain([new Date(2013, 0, 1), new Date(2017, 0, 1)]) // min max dates
-      .range([0, width]);
+      .domain([this.props.from, this.props.to]) // min max dates
+      .range([0, width - 150]);
 
     const y = d3
       .scaleLinear()
       .domain([0, 250]) //max value
-      .range([height, 0]);
+      .range([height, 50]);
 
-    const colors = d3
-      .scaleOrdinal<string, string>()
-      .domain(["apples", "bananas"])
-      .range(["red", "green"]);
+    console.log({ x, y });
 
     const graph = chart
       .selectAll(".graph")
@@ -51,44 +62,50 @@ export default class SvgMultipleLines extends React.Component<Props, {}> {
       .append("g")
       .attr("class", "graph");
 
+    // draw line
     graph
       .append("path")
       .attr("class", "line")
       .style(
         "stroke",
-        (d: any): any => {
-          return colors(d.key);
+        (style): any => {
+          return style.color;
         }
       )
-      .attr("d", parentData => {
+      .attr("d", (parentData: any) => {
+        console.log({ parentData }, parentData.values);
         return d3
           .line()
-          .curve(d3.curveBasis) // make points round, not sharp
           .x((d: any) => x(d.date))
           .y((d: any) => y(d.value))(parentData.values);
       });
 
+    // draw x axis
     chart
       .append("g")
       .attr("class", "axis axis--x")
       .attr("transform", `translate(0,${y(0) - 20})`)
       .call(d3.axisBottom(x));
 
+    // draw y axis
     chart
       .append("g")
       .attr("class", "axis axis--y")
       .attr("transform", `translate(0,0)`)
       .call(d3.axisLeft(y));
 
+    // label
     const legendContainer = chart
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(0,${y(0) + 20})`);
+      .attr(
+        "transform",
+        `translate(${width / 10},${height - (height / 10) * 9})`
+      );
 
-    console.log({ colors });
     legendContainer
       .selectAll("rect")
-      .data(["apples", "bananas"])
+      .data(this.props.data)
       .enter()
       .append("rect")
       .attr("width", 15)
@@ -96,27 +113,32 @@ export default class SvgMultipleLines extends React.Component<Props, {}> {
       .attr("x", (d, i) => {
         return i * 200;
       })
-      .attr("fill", colors);
+      .attr("fill", d => d.color);
 
     legendContainer
       .selectAll("text")
-      .data(["apples", "bananas"])
+      .data(this.props.data)
       .enter()
       .append("text")
       .attr("x", (d, i) => {
         return i * 200 + 25;
       })
       .attr("y", 12)
-      .text(d => d);
+      .text(d => d.key);
   }
 
   render() {
-    console.log(this.props.width, this.props.height);
     return (
-      <svg
-        className="line-chart line-chart--multiple"
-        ref={r => (this.chartRef = r)}
-      />
+      <div>
+        {this.chartRef ? (
+          undefined
+        ) : (
+          <svg
+            className="line-chart line-chart--multiple"
+            ref={r => (this.chartRef = r)}
+          />
+        )}
+      </div>
     );
   }
 }

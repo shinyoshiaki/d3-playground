@@ -1,8 +1,11 @@
 .axis .chart-axis__label {
-  text-anchor: end; }
+  text-anchor: end;
+}
 
 .axis .chart-axis__label--x {
-  text-anchor: middle; }
+  text-anchor: middle;
+}
 
 .axis .chart-axis__axis {
-  stroke-opacity: 0.3; }
+  stroke-opacity: 0.3;
+}

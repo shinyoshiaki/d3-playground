@@ -1,15 +1,19 @@
 .line-chart path {
   fill: none;
-  stroke: black; }
+  stroke: black;
+}
 
 .line-chart--area path {
-  fill: cadetblue; }
+  fill: cadetblue;
+}
 
 .line-chart--multiple .axis path,
 .line-chart--multiple .axis line {
   fill: none;
-  stroke: black; }
+  stroke: black;
+}
 
 .line-chart--multiple .line {
   fill: none;
-  stroke-width: 1.5px; }
+  stroke-width: 1.5px;
+}
