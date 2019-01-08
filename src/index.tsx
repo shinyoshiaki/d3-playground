@@ -2,10 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/pages/App";
 import * as serviceWorker from "./serviceWorker";
-import "./styles/index.css"
+import "./styles/index.css";
+import { HashRouter, Route } from "react-router-dom";
 
 ReactDOM.render(
-  <App width={window.innerWidth} height={window.innerHeight} />,
+  <HashRouter>
+    <Route exact path="/" component={App} />
+  </HashRouter>,
   document.getElementById("root")
 );
 
