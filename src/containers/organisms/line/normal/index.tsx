@@ -2,75 +2,25 @@ import * as React from "react";
 import * as d3 from "d3";
 import { BaseType } from "d3";
 
-export default class SvgMultipleLines extends React.Component<
-  {},
-  { data: any[] }
-> {
+interface Props {
+  width: number;
+  height: number;
+  data: any[];
+}
+
+export default class SvgMultipleLines extends React.Component<Props, {}> {
   chartRef?: BaseType;
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
-    const parseTime = d3.timeParse("%Y");
-    this.state = {
-      data: [
-        {
-          key: "apples",
-          values: [
-            {
-              date: parseTime("2013"),
-              value: 121
-            },
-            {
-              date: parseTime("2014"),
-              value: 111
-            },
-            {
-              date: parseTime("2015"),
-              value: 91
-            },
-            {
-              date: parseTime("2016"),
-              value: 111
-            },
-            {
-              date: parseTime("2017"),
-              value: 150
-            }
-          ]
-        },
-        {
-          key: "bananas",
-          values: [
-            {
-              date: parseTime("2013"),
-              value: 215
-            },
-            {
-              date: parseTime("2014"),
-              value: 190
-            },
-            {
-              date: parseTime("2015"),
-              value: 105
-            },
-            {
-              date: parseTime("2016"),
-              value: 220
-            },
-            {
-              date: parseTime("2017"),
-              value: 140
-            }
-          ]
-        }
-      ]
-    };
   }
 
-  componentDidMount() {
-    //TODO: add margins to display axis nicer
+  componentDidUpdate() {
+    console.log("will");
     if (!this.chartRef) return;
-    const width = 700,
-      height = 500;
+    console.log({ ref: this.chartRef }, this.chartRef);
+
+    const width = this.props.width,
+      height = this.props.height;
 
     const chart = d3
       .select(this.chartRef)
@@ -96,7 +46,7 @@ export default class SvgMultipleLines extends React.Component<
 
     const graph = chart
       .selectAll(".graph")
-      .data(this.state.data)
+      .data(this.props.data)
       .enter()
       .append("g")
       .attr("class", "graph");
@@ -161,6 +111,7 @@ export default class SvgMultipleLines extends React.Component<
   }
 
   render() {
+    console.log(this.props.width, this.props.height);
     return (
       <svg
         className="line-chart line-chart--multiple"
