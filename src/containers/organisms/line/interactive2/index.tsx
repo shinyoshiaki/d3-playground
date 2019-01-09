@@ -68,8 +68,8 @@ export default class SvgIntractSnapMultipleLines extends React.Component<
 
       const value =
         dist1 < dist2 ? item.values[index].value : item.values[index + 1].value;
-
-      return { x: x(x0), y, value, active: true };
+      const pos = dist1 < dist2 ? a : b;
+      return { x: pos.x, y: pos.y, value, active: true };
     });
 
     this.setState({ tips: next });
@@ -143,6 +143,7 @@ export default class SvgIntractSnapMultipleLines extends React.Component<
                 <g
                   className="focus"
                   transform={`translate(${tip.x as any},${y(tip.y as any)})`}
+                  key={item.key}
                 >
                   <text>{tip.value}</text>
                 </g>
