@@ -86,13 +86,18 @@ export default class SvgMultipleLines extends React.Component<
     const { width, height, data } = this.props;
     const x = d3
       .scaleTime()
-      .domain([this.props.from, this.props.to]) // min max dates
+      .domain([this.props.from, this.props.to])
       .range([0, width - 150]);
 
     const y = d3
       .scaleLinear()
-      .domain([0, 250]) //max value
+      .domain([0, 250])
       .range([height, 50]);
+    
+    const line = d3
+      .line()
+      .x((d: any) => x(d.date))
+      .y((d: any) => y(d.value));
     return (
       <svg
         className="line-chart line-chart--multiple"
@@ -157,27 +162,12 @@ export default class SvgMultipleLines extends React.Component<
                 className="line"
                 style={{ stroke: item.color }}
                 d={
-                  d3
-                    .line()
-                    .x((d: any) => x(d.date))
-                    .y((d: any) => y(d.value))(item.values as any) as any
+                  line(item.values as any) as any
                 }
               />
             </g>
           ))}
-          {data.map(item => (
-            <g className="voronoi" key={item.key}>
-              <path
-                style={{ display: "none" }}
-                d={
-                  d3
-                    .line()
-                    .x((d: any) => x(d.date))
-                    .y((d: any) => y(d.value))(item.values as any) as any
-                }
-              />
-            </g>
-          ))}
+         
         </g>
       </svg>
     );
