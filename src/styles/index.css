@@ -4408,6 +4408,10 @@ input[type="button"].btn-block {
   margin-right: -0.625rem;
   margin-left: -0.625rem;
 }
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
 
 .card-img-overlay {
   position: absolute;
