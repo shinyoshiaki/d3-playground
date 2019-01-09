@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as d3 from "d3";
 import { select, axisBottom, axisLeft } from "d3";
+import { twoPointPos } from "../../../../utill/calc";
 
 interface Props {
   width: number;
@@ -14,26 +15,33 @@ interface Props {
   }[];
 }
 
+interface tip {
+  x: number;
+  y: number;
+  value: any;
+  active: boolean;
+}
+
 export default class SvgMultipleLines extends React.Component<
   Props,
-  { tipX: Date; tipY: number; value: any; active: boolean }
+  { tips: tip[] }
 > {
   constructor(props: Props) {
     super(props);
-    this.state = { tipX: this.props.from, tipY: 0, value: 0, active: false };
+
+    this.state = {
+      tips: this.props.data.map(() => {
+        return { x: 0, y: 0, value: 0, active: false };
+      })
+    };
   }
 
   mousemove() {
-    const { width, height, data } = this.props;
+    const { width, data } = this.props;
     const x = d3
       .scaleTime()
       .domain([this.props.from, this.props.to]) // min max dates
       .range([0, width - 150]);
-
-    const y = d3
-      .scaleLinear()
-      .domain([0, 250]) //max value
-      .range([height, 50]);
 
     const bisecData = d3.bisector(function(d: any) {
       return d.date;
@@ -43,17 +51,26 @@ export default class SvgMultipleLines extends React.Component<
     console.log({ mouse });
     console.log("mouse", d3.mouse(overlay as any)[1]);
     const x0 = x.invert(d3.mouse(overlay as any)[0]);
-    const y0 = y.invert(d3.mouse(overlay as any)[1]);
-    const index = bisecData(data[0].values, x0, 1) - 1;
-    const value = data[0].values[index].value;
-    if (Math.abs(y0 - value) < 20) this.setState({ active: true });
-    else this.setState({ active: false });
-    console.log({ x0, y0, index }, data[0].values[index].value);
-    this.setState({
-      tipX: x0,
-      tipY: data[0].values[index].value,
-      value: data[0].values[index].value
+
+    const next: tip[] = data.map(item => {
+      const index = bisecData(item.values, x0, 1) - 1;
+      const value = item.values[index].value;
+
+      console.log("test", x(item.values[index].date));
+
+      const a = { x: x(item.values[index].date), y: item.values[index].value };
+      const b = {
+        x: x(item.values[index + 1].date),
+        y: item.values[index + 1].value
+      };
+      const y = twoPointPos(a, b, x(x0));
+
+      console.log(x(x0), { y });
+
+      return { x: x(x0), y, value, active: true };
     });
+
+    this.setState({ tips: next });
   }
 
   componentDidMount() {
@@ -120,15 +137,19 @@ export default class SvgMultipleLines extends React.Component<
             ))}
           </g>
 
-          {this.state.active && (
-            <g
-              className="focus"
-              transform={`translate(${x(this.state.tipX as any)},${y(this.state
-                .tipY as any)})`}
-            >
-              <text>{this.state.value}</text>
-            </g>
-          )}
+          {data.map((item, i) => {
+            const tip = this.state.tips[i];
+            return (
+              tip.active && (
+                <g
+                  className="focus"
+                  transform={`translate(${tip.x as any},${y(tip.y as any)})`}
+                >
+                  <text>{tip.value}</text>
+                </g>
+              )
+            );
+          })}
 
           {data.map(item => (
             <g className="graph" key={item.key}>

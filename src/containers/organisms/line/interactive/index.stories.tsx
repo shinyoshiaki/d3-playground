@@ -60,6 +60,31 @@ export const lineExample = [
         value: 150
       }
     ]
+  },  {
+    key: "tea",
+    color: "green",
+    values: [
+      {
+        date: parseTime("2013"),
+        value: 135
+      },
+      {
+        date: parseTime("2014"),
+        value: 19
+      },
+      {
+        date: parseTime("2015"),
+        value: 35
+      },
+      {
+        date: parseTime("2016"),
+        value: 22
+      },
+      {
+        date: parseTime("2017"),
+        value: 150
+      }
+    ]
   }
 ];
 
